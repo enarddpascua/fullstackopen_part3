@@ -1,11 +1,15 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
-app.use(express.json());
+const cors = require("cors");
+
 morgan.token("tae", (req, res) => {
   return JSON.stringify(req.body);
 });
 
+app.use(express.static("dist"));
+app.use(express.json());
+app.use(cors());
 app.use(morgan(":method :url :status :response-time ms :tae", "immediate"));
 
 let persons = [
@@ -34,10 +38,6 @@ let persons = [
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
-
-app.get("/", (request, response) => {
-  response.send("<h1>Hello World!</h1>");
-});
 
 app.get("/persons", (request, response) => {
   response.json(persons);
@@ -83,7 +83,7 @@ app.post("/api/persons", (request, response) => {
   response.status(200).end();
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
