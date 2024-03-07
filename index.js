@@ -39,7 +39,7 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-app.get("/persons", (request, response) => {
+app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
 
