@@ -62,7 +62,7 @@ app.get("/api/persons/:id", (request, response) => {
 app.delete("/api/persons/:id", (request, response) => {
   let id = Number(request.params.id);
   persons = persons.filter((p) => p.id !== id);
-  response.status(204).end();
+  response.status(204);
 });
 
 app.post("/api/persons", (request, response) => {
@@ -78,9 +78,9 @@ app.post("/api/persons", (request, response) => {
     return;
   }
 
-  let addPerson = persons.concat({ name, number, id });
-  persons = addPerson;
-  response.status(200).end();
+  let newPerson = { name, number, id };
+  persons = persons.concat(newPerson);
+  response.status(200).send(newPerson);
 });
 
 const PORT = process.env.PORT || 3001;
