@@ -3,7 +3,7 @@ require("dotenv").config();
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
-const Person = require("./model/person");
+const Person = require("./models/person");
 
 morgan.token("tae", (req, res) => {
   return JSON.stringify(req.body);
