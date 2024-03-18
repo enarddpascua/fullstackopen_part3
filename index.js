@@ -26,14 +26,18 @@ app.get("/api/info", (request, response) => {
   });
 });
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
   console.log(request.params.id, typeof request.params.id);
   Person.findById(request.params.id)
     .then((person) => {
-      response.json(person);
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
     })
     .catch((err) => {
-      response.status(404).end();
+      next(err);
     });
 });
 
@@ -52,6 +56,32 @@ app.post("/api/persons", (request, response) => {
     response.json(res).status(200).end();
   });
 });
+
+app.put("/api/persons/:id", (request, response, next) => {
+  Person.findByIdAndUpdate(
+    request.params.id,
+    {
+      number: request.body.number,
+    },
+    { new: true }
+  )
+    .then((res) => {
+      response.json(res);
+    })
+    .catch((err) => next(err));
+});
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 
